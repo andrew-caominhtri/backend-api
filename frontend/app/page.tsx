@@ -16,7 +16,7 @@ export default function Home(){
 
  useEffect(()=>{
 
-  fetch("http://localhost:5000/api/products")
+  https://microservices-project-5n0y.onrender.com
    .then(res=>res.json())
    .then(data=>setProducts(data))
 
