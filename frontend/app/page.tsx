@@ -16,7 +16,7 @@ export default function Home(){
 
  useEffect(()=>{
 
-  https://microservices-project-5n0y.onrender.com
+  fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`)
    .then(res=>res.json())
    .then(data=>setProducts(data))
 
@@ -40,7 +40,7 @@ export default function Home(){
 
      {p.image && (
       <Image
-       src={`http://localhost:5000/uploads/${p.image}`}
+       src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${p.image}`}
        alt={p.name}
        width={150}
        height={150}

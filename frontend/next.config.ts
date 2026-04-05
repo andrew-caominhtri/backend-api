@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
    {
     protocol: "http",
     hostname: "localhost",
-    port: "5000",
+    port: "fetch(`${process.env.NEXT_PUBLIC_API_URL}",
     pathname: "/uploads/**",
    },
   ],

@@ -18,7 +18,7 @@ export default function EditProduct(){
 
 useEffect(()=>{
 
- fetch(`http://localhost:5000/api/products/${id}`)
+ fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${id}`)
   .then(res=>res.json())
   .then(product=>{
 
@@ -27,7 +27,7 @@ useEffect(()=>{
    setDescription(product.description || "")
 
    if(product.image){
-    setPreview(`http://localhost:5000/uploads/${product.image}`)
+    setPreview(`${process.env.NEXT_PUBLIC_API_URL}/uploads/${product.image}`)
    }
 
   })
@@ -46,7 +46,7 @@ useEffect(()=>{
    formData.append("image",image)
   }
 
-  await fetch(`http://localhost:5000/api/products/${params.id}`,{
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${params.id}`,{
 
    method:"PUT",
    body:formData

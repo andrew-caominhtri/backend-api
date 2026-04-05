@@ -24,7 +24,7 @@ export default function AddProduct(){
    formData.append("image",image)
   }
 
-  await fetch("http://localhost:5000/api/products",{
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`,{
 
    method:"POST",
    body:formData

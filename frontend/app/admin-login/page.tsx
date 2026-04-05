@@ -12,7 +12,7 @@ export default function AdminLogin(){
 
  const handleLogin = async ()=>{
 
-  const res = await fetch("http://localhost:5000/api/auth/admin-login",{
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/admin-login`,{
 
    method:"POST",
 

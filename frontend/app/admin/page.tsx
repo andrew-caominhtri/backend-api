@@ -27,7 +27,7 @@ export default function AdminDashboard(){
    return
   }
 
-  https://microservices-project-5n0y.onrender.com
+  fetch(`${process.env.NEXT_PUBLIC_API_URL}`)
    .then(res=>res.json())
    .then(data=>setProducts(data))
 
@@ -39,7 +39,7 @@ export default function AdminDashboard(){
 
   if(!confirmDelete) return
 
-  await fetch(`http://localhost:5000/api/products/${id}`,{
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${id}`,{
    method:"DELETE"
   })
 
@@ -102,14 +102,14 @@ export default function AdminDashboard(){
       {p.image && (
 
        <Image
-        src={`http://localhost:5000/uploads/${p.image}`}
+        src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${p.image}`}
         alt={p.name}
         width={80}
         height={60}
         className="product-thumb"
         unoptimized
         onClick={() =>
-         setPreview(`http://localhost:5000/uploads/${p.image}`)
+         setPreview(`${process.env.NEXT_PUBLIC_API_URL}/uploads/${p.image}`)
         }
        />
 

@@ -10,7 +10,7 @@ export default function AdminRegister(){
 
  const handleRegister = async ()=>{
 
-  const res = await fetch("http://localhost:5000/api/auth/admin-register",{
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/admin-register`,{
 
    method:"POST",
 
