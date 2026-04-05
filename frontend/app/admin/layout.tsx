@@ -8,37 +8,39 @@ export default function AdminLayout({children}:{children:React.ReactNode}){
 
  return(
 
- <div className="admin-container">
+  <div className="admin-container">
 
-  <aside className="sidebar">
+   <aside className="sidebar">
 
-   <h2>Admin</h2>
+    <h2>Admin</h2>
 
-   <ul>
+    <ul>
 
-    <li onClick={()=>router.push("/admin")}>
+     <li onClick={()=>router.push("/admin")}>
       Dashboard
-    </li>
+     </li>
 
-    <li onClick={()=>router.push("/admin/add-product")}>
+     <li onClick={()=>router.push("/admin/add-product")}>
       Add Product
-    </li>
+     </li>
 
-    <li>
+     <li>
       Orders
-    </li>
+     </li>
 
-   </ul>
+    </ul>
 
-  </aside>
+   </aside>
 
-  <main className="admin-main">
+   <main className="admin-main">
 
-   {children}
+    <div className="page-container">
+     {children}
+    </div>
 
-  </main>
+   </main>
 
- </div>
+  </div>
 
  )
 

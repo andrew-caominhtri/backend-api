@@ -1,55 +1,55 @@
 "use client"
 
-import { useState,useEffect } from "react"
-import { useRouter,useParams } from "next/navigation"
+import { useState, useEffect } from "react"
+import { useRouter, useParams } from "next/navigation"
+import Image from "next/image"
 
 export default function EditProduct(){
 
  const router = useRouter()
  const params = useParams()
-
- const id = params.id
+ const id = Array.isArray(params.id) ? params.id[0] : params.id
 
  const [name,setName] = useState("")
  const [price,setPrice] = useState("")
- const [image,setImage] = useState("")
  const [description,setDescription] = useState("")
+ const [image,setImage] = useState<File | null>(null)
+ const [preview,setPreview] = useState("")
 
- useEffect(()=>{
+useEffect(()=>{
 
-  fetch("http://localhost:5000/api/products")
-   .then(res=>res.json())
-   .then(data=>{
+ fetch(`http://localhost:5000/api/products/${id}`)
+  .then(res=>res.json())
+  .then(product=>{
 
-    const product = data.find((p:any)=>p.id == id)
+   setName(product.name || "")
+   setPrice(product.price?.toString() || "")
+   setDescription(product.description || "")
 
-    if(product){
-     setName(product.name)
-     setPrice(product.price)
-     setImage(product.image)
-     setDescription(product.description)
-    }
+   if(product.image){
+    setPreview(`http://localhost:5000/uploads/${product.image}`)
+   }
 
-   })
+  })
 
- },[])
+},[id])
 
- const handleUpdate = async ()=>{
+ const handleUpdate = async()=>{
 
-  await fetch(`http://localhost:5000/api/products/${id}`,{
+  const formData = new FormData()
+
+  formData.append("name",name)
+  formData.append("price",price)
+  formData.append("description",description)
+
+  if(image){
+   formData.append("image",image)
+  }
+
+  await fetch(`http://localhost:5000/api/products/${params.id}`,{
 
    method:"PUT",
-
-   headers:{
-    "Content-Type":"application/json"
-   },
-
-   body:JSON.stringify({
-    name,
-    price,
-    image,
-    description
-   })
+   body:formData
 
   })
 
@@ -59,56 +59,90 @@ export default function EditProduct(){
 
  }
 
+ useEffect(()=>{
+
+  return ()=>{
+
+   if(preview.startsWith("blob:")){
+    URL.revokeObjectURL(preview)
+   }
+
+  }
+
+ },[preview])
+
  return(
 
- <div style={{padding:"40px"}}>
+ <div className="admin-form-container">
 
-  <h2>Update Product</h2>
+  <div className="admin-form-card">
 
-  <input
-   value={name}
-   onChange={(e)=>setName(e.target.value)}
-   placeholder="Product name"
-  />
+   <h2>Update Product</h2>
 
-  <br/><br/>
+   {preview && (
+    <Image
+     src={preview}
+     alt="Product preview"
+     className="preview-image"
+     width={200}
+     height={200}
+    />
+   )}
 
-  <input
-   value={price}
-   onChange={(e)=>setPrice(e.target.value)}
-   placeholder="Price"
-  />
+   <input
+    value={name}
+    onChange={(e)=>setName(e.target.value)}
+    placeholder="Product name"
+   />
 
-  <br/><br/>
+   <input
+    value={price}
+    onChange={(e)=>setPrice(e.target.value)}
+    placeholder="Price"
+   />
 
-  <input
-   value={image}
-   onChange={(e)=>setImage(e.target.value)}
-   placeholder="Image"
-  />
+   <input
+    type="file"
+    onChange={(e)=>{
 
-  <br/><br/>
+     const file = e.target.files?.[0]
 
-  <textarea
-   value={description}
-   onChange={(e)=>setDescription(e.target.value)}
-   placeholder="Description"
-  />
+     if(file){
 
-  <br/><br/>
+      setImage(file)
 
-  <button onClick={handleUpdate}>
-   Update
-  </button>
+      setPreview(URL.createObjectURL(file))
 
-  <button
-   onClick={()=>router.push("/admin")}
-   style={{marginLeft:"10px"}}
-  >
-   Cancel
-  </button>
+     }
+
+    }}
+   />
+
+   <textarea
+    value={description}
+    onChange={(e)=>setDescription(e.target.value)}
+    placeholder="Description"
+   />
+
+   <div className="form-buttons">
+
+    <button className="add-btn" onClick={handleUpdate}>
+      Update
+    </button>
+
+    <button
+     className="cancel-btn"
+     onClick={()=>router.push("/admin")}
+    >
+      Cancel
+    </button>
+
+   </div>
+
+  </div>
 
  </div>
 
  )
+
 }

@@ -52,7 +52,7 @@ export default function RootLayout({
         <footer>
           © 2025 TTD Shop | Thiết kế bởi nhóm TTD | Hotline: 1900 1000
         </footer>
-
+        
       </body>
     </html>
   );

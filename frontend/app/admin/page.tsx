@@ -2,11 +2,21 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
+
+interface Product {
+ id: number
+ name: string
+ price: number
+ image: string
+}
 
 export default function AdminDashboard(){
 
  const router = useRouter()
- const [products,setProducts] = useState([])
+
+ const [products,setProducts] = useState<Product[]>([])
+ const [preview,setPreview] = useState("")
 
  useEffect(()=>{
 
@@ -21,7 +31,7 @@ export default function AdminDashboard(){
    .then(res=>res.json())
    .then(data=>setProducts(data))
 
- },[])
+ },[router])
 
  const handleDelete = async(id:number)=>{
 
@@ -33,7 +43,7 @@ export default function AdminDashboard(){
    method:"DELETE"
   })
 
-  setProducts(products.filter((p:any)=>p.id!==id))
+  setProducts(products.filter((p)=>p.id!==id))
 
  }
 
@@ -73,18 +83,39 @@ export default function AdminDashboard(){
      <th>ID</th>
      <th>Name</th>
      <th>Price</th>
+     <th>Image</th>
      <th>Action</th>
     </tr>
    </thead>
 
    <tbody>
 
-   {products.map((p:any)=>(
+   {products.map((p)=>(
     <tr key={p.id}>
 
      <td>{p.id}</td>
      <td>{p.name}</td>
-     <td>{p.price}</td>
+     <td>{p.price.toLocaleString()}₫</td>
+
+     <td>
+
+      {p.image && (
+
+       <Image
+        src={`http://localhost:5000/uploads/${p.image}`}
+        alt={p.name}
+        width={80}
+        height={60}
+        className="product-thumb"
+        unoptimized
+        onClick={() =>
+         setPreview(`http://localhost:5000/uploads/${p.image}`)
+        }
+       />
+
+      )}
+
+     </td>
 
      <td>
 
@@ -112,6 +143,28 @@ export default function AdminDashboard(){
   </table>
 
  </main>
+
+ {/* modal preview ảnh */}
+
+ {preview && (
+
+  <div
+   className="image-modal"
+   onClick={()=>setPreview("")}
+  >
+
+   <Image
+    src={preview}
+    alt="Product preview"
+    width={800}
+    height={600}
+    className="modal-image"
+    unoptimized
+   />
+
+  </div>
+
+ )}
 
 </div>
 
