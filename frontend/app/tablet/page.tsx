@@ -1,8 +1,14 @@
+import { Suspense } from "react"
+import { CategoryProductList } from "@/components/CategoryProductList"
+
 export default function TabletPage() {
   return (
-    <section className="products">
-      <h2>📱 Máy tính bảng</h2>
-      <p>Danh sách các tablet.</p>
-    </section>
+    <Suspense fallback={<p className="category-page-loading">Đang tải…</p>}>
+      <CategoryProductList
+        categorySlug="tablet"
+        title="Máy tính bảng"
+        emoji="📱"
+      />
+    </Suspense>
   )
 }

@@ -3,12 +3,15 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import { apiUrl } from "@/lib/api-url"
 
 interface Product {
  id: number
  name: string
  price: number
  image: string
+ category?: string | null
+ brand?: string | null
 }
 
 export default function AdminDashboard(){
@@ -27,7 +30,7 @@ export default function AdminDashboard(){
    return
   }
 
-  fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`)
+  fetch(`${apiUrl}/api/products`)
    .then(res=>res.json())
    .then(data=>setProducts(data))
 
@@ -39,7 +42,7 @@ export default function AdminDashboard(){
 
   if(!confirmDelete) return
 
-  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${id}`,{
+  await fetch(`${apiUrl}/api/products/${id}`,{
    method:"DELETE"
   })
 
@@ -82,6 +85,8 @@ export default function AdminDashboard(){
     <tr>
      <th>ID</th>
      <th>Name</th>
+     <th>Brand</th>
+     <th>Category</th>
      <th>Price</th>
      <th>Image</th>
      <th>Action</th>
@@ -95,6 +100,8 @@ export default function AdminDashboard(){
 
      <td>{p.id}</td>
      <td>{p.name}</td>
+     <td>{p.brand ?? "—"}</td>
+     <td>{p.category ?? "—"}</td>
      <td>{p.price.toLocaleString()}₫</td>
 
      <td>
@@ -102,14 +109,14 @@ export default function AdminDashboard(){
       {p.image && (
 
        <Image
-        src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${p.image}`}
+        src={`${apiUrl}/uploads/${p.image}`}
         alt={p.name}
         width={80}
         height={60}
         className="product-thumb"
         unoptimized
         onClick={() =>
-         setPreview(`${process.env.NEXT_PUBLIC_API_URL}/uploads/${p.image}`)
+          setPreview(`${apiUrl}/uploads/${p.image}`)
         }
        />
 

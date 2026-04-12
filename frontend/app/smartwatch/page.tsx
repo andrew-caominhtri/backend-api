@@ -1,8 +1,14 @@
+import { Suspense } from "react"
+import { CategoryProductList } from "@/components/CategoryProductList"
+
 export default function SmartWatchPage() {
   return (
-    <section className="products">
-      <h2>⌚ Đồng hồ thông minh</h2>
-      <p>Danh sách các mẫu smartwatch.</p>
-    </section>
+    <Suspense fallback={<p className="category-page-loading">Đang tải…</p>}>
+      <CategoryProductList
+        categorySlug="smartwatch"
+        title="Đồng hồ thông minh"
+        emoji="⌚"
+      />
+    </Suspense>
   )
 }

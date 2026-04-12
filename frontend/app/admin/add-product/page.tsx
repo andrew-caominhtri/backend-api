@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { apiUrl } from "@/lib/api-url"
 
 export default function AddProduct(){
 
@@ -9,6 +10,8 @@ export default function AddProduct(){
 
  const [name,setName] = useState("")
  const [price,setPrice] = useState("")
+ const [category,setCategory] = useState("")
+ const [brand,setBrand] = useState("")
  const [image,setImage] = useState<File | null>(null)
  const [description,setDescription] = useState("")
 
@@ -18,13 +21,15 @@ export default function AddProduct(){
 
   formData.append("name",name)
   formData.append("price",price)
+  formData.append("category",category)
+  formData.append("brand",brand)
   formData.append("description",description)
 
   if(image){
    formData.append("image",image)
   }
 
-  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`,{
+   await fetch(`${apiUrl}/api/products`,{
 
    method:"POST",
    body:formData
@@ -51,6 +56,16 @@ export default function AddProduct(){
   <input
    placeholder="Price"
    onChange={(e)=>setPrice(e.target.value)}
+  />
+
+  <input
+   placeholder="Category"
+   onChange={(e)=>setCategory(e.target.value)}
+  />
+
+  <input
+   placeholder="Brand"
+   onChange={(e)=>setBrand(e.target.value)}
   />
 
   <input

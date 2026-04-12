@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { apiUrl } from "@/lib/api-url"
 
 export default function AdminRegister(){
 
@@ -10,7 +11,7 @@ export default function AdminRegister(){
 
  const handleRegister = async ()=>{
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/admin-register`,{
+  const res = await fetch(`${apiUrl}/api/auth/admin-register`,{
 
    method:"POST",
 

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter, useParams } from "next/navigation"
 import Image from "next/image"
+import { apiUrl } from "@/lib/api-url"
 
 export default function EditProduct(){
 
@@ -12,22 +13,27 @@ export default function EditProduct(){
 
  const [name,setName] = useState("")
  const [price,setPrice] = useState("")
+ const [category,setCategory] = useState("")
+ const [brand,setBrand] = useState("")
  const [description,setDescription] = useState("")
  const [image,setImage] = useState<File | null>(null)
+ const [savedImage,setSavedImage] = useState<string | null>(null)
  const [preview,setPreview] = useState("")
 
 useEffect(()=>{
-
- fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${id}`)
+ fetch(`${apiUrl}/api/products/${id}`)
   .then(res=>res.json())
   .then(product=>{
 
    setName(product.name || "")
    setPrice(product.price?.toString() || "")
+   setCategory(product.category || "")
+   setBrand(product.brand || "")
    setDescription(product.description || "")
+   setSavedImage(product.image || null)
 
    if(product.image){
-    setPreview(`${process.env.NEXT_PUBLIC_API_URL}/uploads/${product.image}`)
+    setPreview(`${apiUrl}/uploads/${product.image}`)
    }
 
   })
@@ -40,13 +46,17 @@ useEffect(()=>{
 
   formData.append("name",name)
   formData.append("price",price)
+  formData.append("category",category)
+  formData.append("brand",brand)
   formData.append("description",description)
 
   if(image){
    formData.append("image",image)
+  } else if (savedImage) {
+   formData.append("image",savedImage)
   }
 
-  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${params.id}`,{
+  await fetch(`${apiUrl}/api/products/${params.id}`,{
 
    method:"PUT",
    body:formData
@@ -86,6 +96,7 @@ useEffect(()=>{
      className="preview-image"
      width={200}
      height={200}
+     unoptimized
     />
    )}
 
@@ -99,6 +110,18 @@ useEffect(()=>{
     value={price}
     onChange={(e)=>setPrice(e.target.value)}
     placeholder="Price"
+   />
+
+   <input
+    value={category}
+    onChange={(e)=>setCategory(e.target.value)}
+    placeholder="Category"
+   />
+
+   <input
+    value={brand}
+    onChange={(e)=>setBrand(e.target.value)}
+    placeholder="Brand"
    />
 
    <input

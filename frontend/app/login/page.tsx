@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { apiUrl } from "@/lib/api-url"
 
 export default function Login(){
 
@@ -12,7 +13,7 @@ export default function Login(){
 
  const handleLogin = async ()=>{
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`,{
+  const res = await fetch(`${apiUrl}/auth/login`,{
 
    method:"POST",
 

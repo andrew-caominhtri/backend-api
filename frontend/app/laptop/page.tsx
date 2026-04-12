@@ -1,8 +1,10 @@
+import { Suspense } from "react"
+import { CategoryProductList } from "@/components/CategoryProductList"
+
 export default function LaptopPage() {
   return (
-    <section className="products">
-      <h2>💻 Laptop</h2>
-      <p>Danh sách các laptop.</p>
-    </section>
+    <Suspense fallback={<p className="category-page-loading">Đang tải…</p>}>
+      <CategoryProductList categorySlug="laptop" title="Laptop" emoji="💻" />
+    </Suspense>
   )
 }

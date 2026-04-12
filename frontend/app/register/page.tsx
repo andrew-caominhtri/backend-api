@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { apiUrl } from "@/lib/api-url"
 
 export default function Register(){
 
@@ -10,7 +11,7 @@ export default function Register(){
 
   const handleRegister = async () => {
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`,{
+    const res = await fetch(`${apiUrl}/auth/register`,{
 
       method:"POST",
       headers:{

@@ -1,8 +1,14 @@
+import { Suspense } from "react"
+import { CategoryProductList } from "@/components/CategoryProductList"
+
 export default function HeadphonePage() {
   return (
-    <section className="products">
-      <h2>🎧 Tai nghe</h2>
-      <p>Danh sách các tai nghe.</p>
-    </section>
+    <Suspense fallback={<p className="category-page-loading">Đang tải…</p>}>
+      <CategoryProductList
+        categorySlug="headphone"
+        title="Âm thanh"
+        emoji="🎧"
+      />
+    </Suspense>
   )
 }

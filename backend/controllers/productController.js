@@ -6,27 +6,21 @@ exports.getProducts = async (req, res) => {
 };
 
 exports.getProductById = async (req, res) => {
+  const { id } = req.params;
 
- const { id } = req.params;
+  const result = await pool.query("SELECT * FROM products WHERE id=$1", [id]);
 
- const result = await pool.query(
-  "SELECT * FROM products WHERE id=$1",
-  [id]
- );
-
- res.json(result.rows[0]);
-
+  res.json(result.rows[0]);
 };
 
 exports.createProduct = async (req, res) => {
-  const { name, price, description } = req.body;
+  const { name, price, description, category, brand } = req.body;
 
-  // lấy filename từ multer
   const image = req.file ? req.file.filename : null;
 
   const result = await pool.query(
-    "INSERT INTO products(name,price,image,description) VALUES($1,$2,$3,$4) RETURNING *",
-    [name, price, image, description]
+    "INSERT INTO products(name,price,image,description,category,brand) VALUES($1,$2,$3,$4,$5,$6) RETURNING *",
+    [name, price, image, description, category || null, brand || null]
   );
 
   res.json(result.rows[0]);
@@ -34,14 +28,13 @@ exports.createProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   const { id } = req.params;
-  const { name, price, description } = req.body;
+  const { name, price, description, category, brand } = req.body;
 
-  // nếu có upload ảnh mới thì lấy ảnh mới
   const image = req.file ? req.file.filename : req.body.image;
 
   await pool.query(
-    "UPDATE products SET name=$1,price=$2,image=$3,description=$4 WHERE id=$5",
-    [name, price, image, description, id]
+    "UPDATE products SET name=$1,price=$2,image=$3,description=$4,category=$5,brand=$6 WHERE id=$7",
+    [name, price, image, description, category || null, brand || null, id]
   );
 
   res.json({ message: "Updated" });
