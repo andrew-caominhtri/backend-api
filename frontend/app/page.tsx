@@ -29,11 +29,34 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([])
   const [heroIndex, setHeroIndex] = useState(0)
   const [query, setQuery] = useState("")
+  const [fetchError, setFetchError] = useState<string | null>(null)
 
   useEffect(() => {
+    let cancelled = false
     fetch(`${apiUrl}/api/products`)
-      .then((res) => res.json())
-      .then((data) => setProducts(data))
+      .then((res) => {
+        if (!res.ok) throw new Error(`Lỗi ${res.status}`)
+        return res.json()
+      })
+      .then((data) => {
+        if (cancelled) return
+        if (Array.isArray(data)) {
+          setFetchError(null)
+          setProducts(data)
+        } else {
+          setFetchError("Dữ liệu sản phẩm không hợp lệ")
+        }
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return
+        console.error("Fetch products:", err)
+        setFetchError(
+          "Không tải được danh sách sản phẩm."
+        )
+      })
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   useEffect(() => {
@@ -124,6 +147,12 @@ export default function Home() {
             </p>
           </section>
 
+          {fetchError ? (
+            <p className="home-fetch-error" role="alert">
+              {fetchError}
+            </p>
+          ) : null}
+
           <div className="section-bar">
             <h3>
               <i className="fa-solid fa-bolt" /> Gợi ý cho bạn
@@ -170,7 +199,7 @@ export default function Home() {
             ))}
           </section>
 
-          {filtered.length === 0 ? (
+          {!fetchError && filtered.length === 0 ? (
             <p className="empty-products">Không tìm thấy sản phẩm phù hợp.</p>
           ) : null}
         </div>

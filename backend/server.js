@@ -4,10 +4,34 @@ require("dotenv").config();
 
 const app = express();
 
+/** Luôn cho phép Next dev local gọi API trên Render (kèm origin từ CORS_ORIGIN). */
+const LOCAL_DEV_ORIGINS = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "http://localhost:3001",
+];
+
 const corsOrigins = process.env.CORS_ORIGIN?.split(",").map((s) => s.trim()).filter(Boolean);
+
+function isHttpsVercelApp(origin) {
+  try {
+    const u = new URL(origin);
+    return u.protocol === "https:" && u.hostname.endsWith(".vercel.app");
+  } catch {
+    return false;
+  }
+}
+
 app.use(
   cors({
-    origin: corsOrigins.length > 0 ? corsOrigins : true,
+    origin(origin, callback) {
+      if (!origin) return callback(null, true);
+      if (LOCAL_DEV_ORIGINS.includes(origin)) return callback(null, true);
+      if (corsOrigins.includes(origin)) return callback(null, true);
+      if (isHttpsVercelApp(origin)) return callback(null, true);
+      if (corsOrigins.length === 0) return callback(null, true);
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );

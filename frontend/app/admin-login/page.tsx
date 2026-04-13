@@ -14,31 +14,30 @@ export default function AdminLogin(){
 
  const handleLogin = async ()=>{
 
-  const res = await fetch(`${apiUrl}/api/auth/admin-login`,{
+  try {
+   const res = await fetch(`${apiUrl}/api/auth/admin-login`,{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({email,password})
+   })
 
-   method:"POST",
+   const data = await res.json().catch(() => ({}))
 
-   headers:{
-    "Content-Type":"application/json"
-   },
+   if(data.token){
+    localStorage.setItem("adminToken",data.token)
+    notifyAuthChanged()
+    router.push("/admin")
+    router.refresh()
+    return
+   }
 
-   body:JSON.stringify({email,password})
-
-  })
-
-  const data = await res.json()
-
-  if(data.token){
-
-   localStorage.setItem("adminToken",data.token)
-   notifyAuthChanged()
-
-   router.push("/admin")
-
-  }else{
-
-   alert("Login failed")
-
+   const msg = data.message || (res.ok ? "Không nhận được token" : `Lỗi ${res.status}`)
+   alert(`Đăng nhập thất bại: ${msg}`)
+  } catch (e) {
+   console.error(e)
+   alert(
+    "Không kết nối được API. Kiểm tra NEXT_PUBLIC_API_URL trên Vercel và CORS_ORIGIN trên Render (phải có đúng domain Vercel, ví dụ https://cloud-project-henna.vercel.app)."
+   )
   }
 
  }
