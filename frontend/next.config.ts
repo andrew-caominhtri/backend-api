@@ -5,7 +5,7 @@ const url = new URL(apiUrl);
 const protocol = url.protocol === "https:" ? "https" : "http";
 const apiHostIsLoopback =
   url.hostname === "localhost" ||
-  url.hostname === "127.0.0.1" ||
+  url.hostname === "your-local-ip-address" ||
   url.hostname === "::1";
 
 const nextConfig: NextConfig = {
